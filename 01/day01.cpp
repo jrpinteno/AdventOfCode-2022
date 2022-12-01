@@ -16,26 +16,9 @@ std::vector<int> parseInput(const std::filesystem::path& filePath) {
 	return inputLines;
 }
 
-void partOne(std::vector<int>& snacks) {
-	int maxCalories = 0;
+std::vector<int> sumCalories(std::vector<int>& snacks) {
 	int elfCalories = 0;
-
-	for (auto calories : snacks) {
-		if (calories != 0) {
-			elfCalories += calories;
-			continue;
-		}
-
-		maxCalories = std::max(maxCalories, elfCalories);
-		elfCalories = 0;
-	}
-
-	std::cout << maxCalories << std::endl;
-}
-
-void partTwo(std::vector<int>& snacks) {
-	int elfCalories = 0;
-	std::vector<int> elves;
+	std::vector<int> elvesCalories;
 
 	for (auto snack : snacks) {
 		if (snack != 0) {
@@ -43,18 +26,26 @@ void partTwo(std::vector<int>& snacks) {
 			continue;
 		}
 
-		elves.push_back(elfCalories);
+		elvesCalories.push_back(elfCalories);
 		elfCalories = 0;
 	}
 
-	std::sort(elves.begin(), elves.end(), std::greater<>());
+	return elvesCalories;
+}
 
-	std::cout << elves[0] + elves[1] + elves[2] << std::endl;
+void partOne(std::vector<int>& snacks) {
+	std::cout << snacks.front() << std::endl;
+}
+
+void partTwo(std::vector<int>& snacks) {
+	std::cout << snacks[0] + snacks[1] + snacks[2] << std::endl;
 }
 
 int main () {
 	auto snacks = parseInput("input.txt");
+	auto elvesSnacks = sumCalories(snacks);
+	std::sort(elvesSnacks.begin(), elvesSnacks.end(), std::greater<>());
 
-	partOne(snacks);
-	partTwo(snacks);
+	partOne(elvesSnacks);
+	partTwo(elvesSnacks);
 }

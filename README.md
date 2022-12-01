@@ -1,8 +1,8 @@
 # AdventOfCode-2022
 
 I'm gonna be using this to relearn C++ (focusing on C++17) and data structures / algorithms. Hopefully I'll be able
-to follow the rythm. I don't expect to get the most optimal solution, just something that works (and day by day reducing
-the awkwardness of coding in C++.
+to follow the rhythm. I don't expect to get the most optimal solution, just something that works (and day by day reducing
+the awkwardness of coding in C++).
 
 ## Log
 ### Day 01

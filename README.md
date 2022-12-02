@@ -8,3 +8,7 @@ the awkwardness of coding in C++).
 ### Day 01
 No surprises here since, being the first day, I expected it to be easy, coding wise. These first days will be used to gain back the C++ feel
 after so many years and gather some of the utilities that will become useful for the following days.
+
+### Day 02
+I didn't want to think much about it and possibly ending with a *clever* over-engineered solution that would work for both parts and 
+went straight to use a hashmap linking each possible combination with the outcome result for both parts.

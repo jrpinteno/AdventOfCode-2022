@@ -34,14 +34,12 @@ int part1(const std::vector<std::string>& rucksacks) {
 	std::vector<char> common;
 
 	for (std::string_view rucksack : rucksacks) {
-		std::set<char> compartment1;
-		std::set<char> compartment2;
 		auto rucksackLength = rucksack.size() / 2;
 
-		for (int i = 0; i < rucksackLength; i++) {
-			compartment1.insert(rucksack[i]);
-			compartment2.insert(rucksack[i + rucksackLength]);
-		}
+		auto half1 = rucksack.substr(0, rucksackLength - 1);
+		auto half2 = rucksack.substr(rucksackLength, rucksack.size() - 1);
+		auto compartment1 = std::set(half1.begin(), half1.end());
+		auto compartment2 = std::set(half2.begin(), half2.end());
 
 		std::set_intersection(compartment1.begin(), compartment1.end(), compartment2.begin(), compartment2.end(), std::back_inserter(common));
 	}

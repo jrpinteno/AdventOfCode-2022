@@ -18,3 +18,6 @@ It might be too soon already, but I'm beginning to feel my rustiness when it com
 the idea of using a `std::unordered_map` for each of the *rucksack*'s compartment and check for maximum occurrence, but I disregarded it 
 and went with a `std::set` to do intersection. 
 Then for the second part I decided to bring back my first idea. The algorithm might not be pretty, neither am I. Might come back to it later on.
+
+Tiny improvement made replacing the inner loop in the first part by a `std::set` initialization using *rucksack*
+substring. Thanks, [Nacho](https://github.com/nlasheras/aoc-2022), for the tip.

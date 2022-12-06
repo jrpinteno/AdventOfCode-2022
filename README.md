@@ -21,3 +21,13 @@ Then for the second part I decided to bring back my first idea. The algorithm mi
 
 Tiny improvement made replacing the inner loop in the first part by a `std::set` initialization using *rucksack*
 substring. Thanks, [Nacho](https://github.com/nlasheras/aoc-2022), for the tip.
+
+### Day 04
+When looking at the input, a conversation just came to my mind which I had 2 weeks ago about the allegedly lack of support for regex on C++ (which
+actually were included for *C++11*. With that parsing was really easy.
+
+### Day05
+First real challenge for the input. Once again, regex came to help for the second part of the input. But the first part, oh boy, that was *fun*.
+I tried matching the last line to obtain the number of crates (took me a while), and then come to the realization I wouldn't be able to use it
+for how I was trying to parse. From bottom to top. The fun part came when, although everything was working as intended, the answer wasn't correct.
+Long story short, *-fsanitize=undefined -fsanitize=address* and never ever again copy-pasting the input to the editor... which trimmed the lines.

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include <set>
 
 std::string generateRegex(int window) {
 	std::string regex = "(.)";
@@ -21,7 +22,7 @@ std::string generateRegex(int window) {
 	return regex;
 }
 
-void solve(const std::string& text, const int window) {
+void solveWithRegex(const std::string& text, const int window) {
 	std::regex pattern(generateRegex(window));
 	std::smatch match;
 	std::regex_search(text, match, pattern);
@@ -29,9 +30,24 @@ void solve(const std::string& text, const int window) {
 	std::cout << match.position() + match.length() << std::endl;
 }
 
+void solveWithSet(const std::string& text, const int window) {
+	for (auto it = text.begin(); it != text.end(); it++) {
+		auto windowChars = std::set(it, it + window);
+
+		if (windowChars.size() == window) {
+			std::cout << std::distance(text.begin(), it) + window << std::endl;
+			break;
+		}
+	}
+}
+
 int main() {
 	auto line = Utils::readString("input06.txt");
 
-	solve(line, 4);
-	solve(line, 14);
+	solveWithRegex(line, 4);
+	solveWithSet(line, 4);
+	solveWithRegex(line, 14);
+	solveWithSet(line, 14);
 }
+
+

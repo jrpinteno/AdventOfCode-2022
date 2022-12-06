@@ -30,4 +30,11 @@ actually were included for *C++11*. With that parsing was really easy.
 First real challenge for the input. Once again, regex came to help for the second part of the input. But the first part, oh boy, that was *fun*.
 I tried matching the last line to obtain the number of crates (took me a while), and then come to the realization I wouldn't be able to use it
 for how I was trying to parse. From bottom to top. The fun part came when, although everything was working as intended, the answer wasn't correct.
+
 Long story short, *-fsanitize=undefined -fsanitize=address* and never ever again copy-pasting the input to the editor... which trimmed the lines.
+
+### Day06
+By far the easiest problem so far (or perhaps I'm bit more used to the language). Made two different solutions, the first one using a regexp generator.
+And for the second one I used a sliding window initializing a temporal set to check for uniqueness.
+Regexp solution is overkill and grows exponentially with the window size... and it led me to a nice *call-it-bug* or unimplemented *undefined behaviour* 
+in *libc++* (using clang over macOS here). As it turns out, *libc++* doesn't support back references: *libc++abi: terminating due to uncaught exception of type std::__1::regex_error: The expression contained an invalid back reference.* *Libstdc++*, on the other hand, does support them.

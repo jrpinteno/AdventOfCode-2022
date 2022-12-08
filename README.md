@@ -38,3 +38,7 @@ By far the easiest problem so far (or perhaps I'm bit more used to the language)
 And for the second one I used a sliding window initializing a temporal set to check for uniqueness.
 Regexp solution is overkill and grows exponentially with the window size... and it led me to a nice *call-it-bug* or unimplemented *undefined behaviour* 
 in *libc++* (using clang over macOS here). As it turns out, *libc++* doesn't support back references: *libc++abi: terminating due to uncaught exception of type std::__1::regex_error: The expression contained an invalid back reference.* *Libstdc++*, on the other hand, does support them.
+
+### Day07
+I was really tempted of parsing the input on a tree. Ended up making use of a `std::stack` of filesnames (with full path) to track position and a 
+`std::unordered_map` to store the sizes of each directory.

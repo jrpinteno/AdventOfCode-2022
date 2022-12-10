@@ -42,3 +42,29 @@ in *libc++* (using clang over macOS here). As it turns out, *libc++* doesn't sup
 ### Day07
 I was really tempted of parsing the input on a tree. Ended up making use of a `std::stack` of filesnames (with full path) to track position and a 
 `std::unordered_map` to store the sizes of each directory.
+
+### Day08
+First idea was to create a grid where I'd store boolean telling whether that tree was visible from any of the 4 directions, so I could check afterwards 
+and count. It was easier to just return a boolean from each of the direction checks and then increase the counter.
+
+For the second part, initially the score was wrong because I wasn't using the ranges properly, counting always from edges to the tree. Once I reversed it, everything came together. Each of the direction checks now returns a `std::pair` with visibility and the amount of trees visible from that tree.
+
+A next iteration would be perhaps to use an array for data locality.
+
+### Day09
+At first I thought the problem was a bit more complicated than it was. I had understood the bridge had a fixed width, then horizontal positions would 
+have to be moduled when trespassing the edges. For the different moves, regex came again and then it was just a matter of dividing the different 
+positions of the tail in regard of the head and how it should move.
+
+For the second part I just refactored to a function checking relative positions of two knots and move accordingly. Then all the knots are in a vector, 
+making it usable for any amount of knots.
+
+### Day10
+One of those days on which you read *part 1* and think: it's a trap! It can't be that simple. Then go to *part 2*, start reading... 
+
+(ノಠ益ಠ)ノ彡┻━┻ 
+
+On a second reading it was simpler than thought.
+
+For the first part I used an `std::unordered_set` to check for the significant *signals*. Then working on the second one, I realised it was simpler to
+use modules since signals are `mod 40` displaced by 20.

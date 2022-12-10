@@ -3,7 +3,7 @@
 #include <iostream>
 
 void drawPixel(int cycle, int xReg) {
-	std::cout << (std::abs(xReg - cycle % 40 + 1) <= 1 ? "#" : ".");
+	std::cout << (std::abs(xReg - (cycle - 1) % 40) <= 1 ? "#" : ".");
 }
 
 void checkEndLine(int cycle) {

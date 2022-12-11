@@ -5,6 +5,8 @@
 #include <numeric>
 
 struct Monkey {
+	static int commonDivisor;
+
 	int id{};
 	std::queue<uint64_t> items;
 	size_t inspections{0};
@@ -12,8 +14,6 @@ struct Monkey {
 	int divisibleBy{1};
 	int successMonkeyId{}, failMonkeyId{};
 };
-
-int commonDivisor = 1;
 
 Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	Monkey newMonkey;
@@ -60,7 +60,7 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 				newWorryLevel = (old * oper2);
 			}
 
-			return newWorryLevel % commonDivisor;
+			return newWorryLevel % Monkey::commonDivisor;
 		};
 	} else {
 		newMonkey.operation = [oper2, isSame](uint64_t old) {
@@ -71,7 +71,7 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 				newWorryLevel = old + oper2;
 			}
 
-			return newWorryLevel % commonDivisor;
+			return newWorryLevel % Monkey::commonDivisor;
 		};
 	}
 
@@ -80,7 +80,7 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	std::smatch matchTest;
 	std::regex_match(monkey[3], matchTest, testPattern);
 	newMonkey.divisibleBy = std::stoi(matchTest[1].str());
-	commonDivisor = std::lcm(commonDivisor, newMonkey.divisibleBy);
+	Monkey::commonDivisor = std::lcm(Monkey::commonDivisor, newMonkey.divisibleBy);
 
 	// TRUE CASE
 	const std::regex truePattern(R"(\s+If true: throw to monkey (\d+))");
@@ -97,7 +97,7 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	return newMonkey;
 }
 
-void processMonkey(Monkey& monkey, std::vector<Monkey>& monkeys) {
+void processMonkey(Monkey& monkey, std::vector<Monkey>& monkeys, int boredom) {
 	while(!monkey.items.empty()) {
 		monkey.inspections += 1;
 
@@ -106,7 +106,7 @@ void processMonkey(Monkey& monkey, std::vector<Monkey>& monkeys) {
 
 		auto newWorryLevel = monkey.operation(item);
 
-		newWorryLevel = newWorryLevel / 3;
+		newWorryLevel = newWorryLevel / boredom;
 
 		if (newWorryLevel % monkey.divisibleBy == 0) {
 			monkeys[monkey.successMonkeyId].items.push(newWorryLevel);
@@ -116,18 +116,10 @@ void processMonkey(Monkey& monkey, std::vector<Monkey>& monkeys) {
 	}
 }
 
-int main() {
-	std::vector<Monkey> monkeys;
-	auto monkeyBlocks = Utils::readBlocks("input11.txt");
-
-	for (const auto &monkeyBlock: monkeyBlocks) {
-		auto monkey = parseMonkeyBlock(monkeyBlock);
-		monkeys.push_back(monkey);
-	}
-
-	for (int round = 0; round < 10000; round++) {
+void makeMonkeysWork(std::vector<Monkey> monkeys, int rounds, int boredom) {
+	for (int round = 0; round < rounds; round++) {
 		for (int i = 0; i < monkeys.size(); i++) {
-			processMonkey(monkeys[i], monkeys);
+			processMonkey(monkeys[i], monkeys, boredom);
 		}
 	}
 
@@ -136,4 +128,19 @@ int main() {
 	});
 
 	std::cout << monkeys[0].inspections * monkeys[1].inspections << std::endl;
+}
+
+int Monkey::commonDivisor = 1;
+
+int main() {
+	std::vector<Monkey> monkeys;
+	auto monkeyBlocks = Utils::readBlocks("test");
+
+	for (const auto &monkeyBlock: monkeyBlocks) {
+		auto monkey = parseMonkeyBlock(monkeyBlock);
+		monkeys.push_back(monkey);
+	}
+
+	makeMonkeysWork(monkeys, 20, 3);
+	makeMonkeysWork(monkeys, 10000, 1);
 }

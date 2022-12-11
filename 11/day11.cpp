@@ -2,15 +2,18 @@
 
 #include <queue>
 #include <regex>
+#include <numeric>
 
 struct Monkey {
 	int id{};
-	std::queue<int> items;
-	int inspections{0};
-	std::function<int(int)> operation;
-	int divisibleBy{};
+	std::queue<uint64_t> items;
+	size_t inspections{0};
+	std::function<uint64_t(uint64_t)> operation;
+	int divisibleBy{1};
 	int successMonkeyId{}, failMonkeyId{};
 };
+
+int commonDivisor = 1;
 
 Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	Monkey newMonkey;
@@ -20,7 +23,7 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	std::regex_match(monkey[0], matchMonkey, monkeyPattern);
 	newMonkey.id = std::stoi(matchMonkey[1].str());
 
-// ITEMS
+	// ITEMS
 	const std::regex itemsPattern(R"(\s+Starting items: (\d+(?:,\s*\d+)*))");
 	std::smatch matchItems;
 	std::regex_match(monkey[1], matchItems, itemsPattern);
@@ -49,20 +52,26 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	}
 
 	if (operation[1] == "*") {
-		newMonkey.operation = [oper2, isSame](int old) {
+		newMonkey.operation = [oper2, isSame](uint64_t old) {
+			uint64_t newWorryLevel;
 			if (isSame) {
-				return old * old;
+				newWorryLevel = old * old;
+			} else {
+				newWorryLevel = (old * oper2);
 			}
 
-			return old * oper2;
+			return newWorryLevel % commonDivisor;
 		};
 	} else {
-		newMonkey.operation = [oper2, isSame](int old) {
+		newMonkey.operation = [oper2, isSame](uint64_t old) {
+			uint64_t newWorryLevel;
 			if (isSame) {
-				return old + old;
+				newWorryLevel = old + old;
+			} else {
+				newWorryLevel = old + oper2;
 			}
 
-			return old + oper2;
+			return newWorryLevel % commonDivisor;
 		};
 	}
 
@@ -71,6 +80,7 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 	std::smatch matchTest;
 	std::regex_match(monkey[3], matchTest, testPattern);
 	newMonkey.divisibleBy = std::stoi(matchTest[1].str());
+	commonDivisor = std::lcm(commonDivisor, newMonkey.divisibleBy);
 
 	// TRUE CASE
 	const std::regex truePattern(R"(\s+If true: throw to monkey (\d+))");
@@ -95,6 +105,7 @@ void processMonkey(Monkey& monkey, std::vector<Monkey>& monkeys) {
 		monkey.items.pop();
 
 		auto newWorryLevel = monkey.operation(item);
+
 		newWorryLevel = newWorryLevel / 3;
 
 		if (newWorryLevel % monkey.divisibleBy == 0) {
@@ -107,14 +118,14 @@ void processMonkey(Monkey& monkey, std::vector<Monkey>& monkeys) {
 
 int main() {
 	std::vector<Monkey> monkeys;
-	auto monkeyBlocks = Utils::readBlocks("test");
+	auto monkeyBlocks = Utils::readBlocks("input11.txt");
 
 	for (const auto &monkeyBlock: monkeyBlocks) {
 		auto monkey = parseMonkeyBlock(monkeyBlock);
 		monkeys.push_back(monkey);
 	}
 
-	for (int round = 0; round < 20; round++) {
+	for (int round = 0; round < 10000; round++) {
 		for (int i = 0; i < monkeys.size(); i++) {
 			processMonkey(monkeys[i], monkeys);
 		}
@@ -123,7 +134,6 @@ int main() {
 	std::sort(monkeys.begin(), monkeys.end(), [](const Monkey& first, const Monkey& second) {
 		return first.inspections > second.inspections;
 	});
-
 
 	std::cout << monkeys[0].inspections * monkeys[1].inspections << std::endl;
 }

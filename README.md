@@ -68,3 +68,5 @@ On a second reading it was simpler than thought.
 
 For the first part I used an `std::unordered_set` to check for the significant *signals*. Then working on the second one, I realised it was simpler to
 use modules since signals are `mod 40` displaced by 20.
+
+Testing the output was bit trickier for the second part, I was having some issues with one missing or extra pixel or even extra line.

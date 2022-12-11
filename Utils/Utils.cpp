@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+
 namespace Utils {
 	std::vector<std::string> readLines(const std::filesystem::path &filePath) {
 		std::string currentLine;
@@ -13,6 +14,25 @@ namespace Utils {
 		}
 
 		return inputLines;
+	}
+
+	std::vector<std::vector<std::string>> readBlocks(const std::filesystem::path &filePath) {
+		std::string currentLine;
+		std::ifstream fileStream{filePath};
+		std::vector<std::vector<std::string>> blocks;
+
+		std::vector<std::string> temp;
+		while (std::getline(fileStream, currentLine)) {
+			if (currentLine.empty()) {
+				blocks.push_back(temp);
+				temp.clear();
+			} else {
+				temp.push_back(currentLine);
+			}
+		}
+
+		blocks.push_back(temp);
+		return blocks;
 	}
 
 	std::string readString(const std::filesystem::path &filePath) {
@@ -73,4 +93,3 @@ namespace Utils {
 		return grid;
 	}
 }
-

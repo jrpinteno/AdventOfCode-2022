@@ -53,24 +53,12 @@ Monkey parseMonkeyBlock(const std::vector<std::string>& monkey) {
 
 	if (operation[1] == "*") {
 		newMonkey.operation = [oper2, isSame](uint64_t old) {
-			uint64_t newWorryLevel;
-			if (isSame) {
-				newWorryLevel = old * old;
-			} else {
-				newWorryLevel = (old * oper2);
-			}
-
+			uint64_t newWorryLevel = old * (isSame ? old : oper2);
 			return newWorryLevel % Monkey::commonDivisor;
 		};
 	} else {
 		newMonkey.operation = [oper2, isSame](uint64_t old) {
-			uint64_t newWorryLevel;
-			if (isSame) {
-				newWorryLevel = old + old;
-			} else {
-				newWorryLevel = old + oper2;
-			}
-
+			uint64_t newWorryLevel = old + (isSame ? old : oper2);
 			return newWorryLevel % Monkey::commonDivisor;
 		};
 	}

@@ -101,6 +101,7 @@ I might revisit this in the future and try the *A\** implementation.
 ### Day 13
 Today was quite an interesting day. I initially had no clue how to implement it properly in *C++*. So I went and thought how the main part would be 
 written in [swift](https://github.com/jrpinteno/AdventOfCode-2022/blob/main/13/Packet.swift) (the commented code was the first version which had a bug, more on that later).
+
 I wanted something similar in *C++*, after asking two friends, realised that `std::variant` was the answer to my prayers. It needed a bit of tinkering to get it properly working. As it turns out, it can be used as a [base type](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2162r0.html). 
 Next step was overriding `operator<()` following the schema I had done in swift. The first part worked flawlessly. But, on the second part, a wild infinite loop appeared.
 

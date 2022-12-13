@@ -91,7 +91,8 @@ level would still be divisible by at least one of them. Given that they are prim
 
 
 ### Day 12
-It's finally here, the shortest path problem. First idea was to implement *A\** using the Manhattan distance as an heuristic. Somewhere along the way
-I ended up implementing *BFS* for both parts.  
+It's finally here, the shortest path problem. First idea was to implement *A\** using the *Manhattan distance* as an heuristic. Somewhere along the way
+I ended up implementing *BFS* and brute force finding the shortest of the shortest paths on the second part. A good improvement to that will be inverting
+the start and end point in the second part (starting at the top).
 
 I might revisit this in the future and try the *A\** implementation

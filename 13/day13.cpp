@@ -11,26 +11,15 @@ struct Packet : std::variant<int, std::vector<Packet>> {
 	explicit Packet(int number) : variant(number) { }
 	explicit Packet(const List& list) : variant(list) { }
 
-	friend bool operator<(const Packet& lhs, const Packet& rhs) {
+	friend bool operator<(const Packet& lhs, const Packet& rhs);
+	/*friend bool operator<(const Packet& lhs, const Packet& rhs) {
 		if (std::holds_alternative<int>(lhs) && std::holds_alternative<int>(rhs)) {
-			std::cout << "Two ints: Comparing " << std::get<int>(lhs) << " < " << std::get<int>(rhs) << std::endl;
 			return std::get<int>(lhs) < std::get<int>(rhs);
 		}
 
 		if (std::holds_alternative<List>(lhs) && std::holds_alternative<List>(rhs)) {
-			std::cout << "Two lists" << std::endl;
 			auto lhsList = std::get<List>(lhs);
 			auto rhsList = std::get<List>(rhs);
-
-			if (lhsList.empty()) {
-				std::cout << " - First list empty: right" << std::endl;
-				return true;
-			}
-
-			if (rhsList.empty()) {
-				std::cout << " - Second list empty: wrong" << std::endl;
-				return false;
-			}
 
 			return std::lexicographical_compare(lhsList.begin(), lhsList.end(), rhsList.begin(), rhsList.end());
 		}
@@ -44,8 +33,32 @@ struct Packet : std::variant<int, std::vector<Packet>> {
 		}
 
 		return false;
+	}*/
+};
+
+
+struct PacketVisitor {
+	bool operator()(int lhs, int rhs) const {
+		return lhs < rhs;
+	}
+
+	bool operator()(Packet::List const& lhs, Packet::List const& rhs) const {
+		return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	}
+
+	bool operator()(int lhs, Packet::List const& rhs) const {
+		return (*this)(Packet::List{lhs}, rhs);
+	}
+
+	bool operator()(Packet::List const& lhs, int rhs) const {
+		return (*this)(lhs, Packet::List{rhs});
 	}
 };
+
+bool operator<(const Packet& lhs, const Packet& rhs) {
+	return std::visit(PacketVisitor {}, lhs, rhs);
+}
+
 
 auto parse(std::string_view& text) -> Packet {
 	// Empty
@@ -78,27 +91,33 @@ Packet parse(const std::string& text) {
 	return parse(sv);
 }
 
-bool processPair(const std::string& left, const std::string& right) {
-	std::cout << left << std::endl;
-	std::cout << right << std::endl;
-
-	auto lhs = parse(left);
-	auto rhs = parse(right);
-
-	return lhs < rhs;
-}
-
 int main() {
-	auto pairs = Utils::readBlocks("test");
+	auto pairs = Utils::readBlocks("input13.txt");
 
 	int i = 1;
 	int sum = 0;
-	for (const auto& pair : pairs) {
-		auto right = processPair(pair[0], pair[1]);
+	std::vector<Packet> packets;
 
-		sum += (right ? i : 0);
+	for (const auto& pair : pairs) {
+		auto lhs = parse(pair[0]);
+		auto rhs = parse(pair[1]);
+		packets.push_back(lhs);
+		packets.push_back(rhs);
+
+		sum += (lhs < rhs ? i : 0);
 		i += 1;
 	}
 
 	std::cout << sum << std::endl;
+
+	Packet packet2 = parse("[[2]]");
+	Packet packet6 = parse("[[6]]");
+
+	packets.push_back(packet2);
+	packets.push_back(packet6);
+	std::sort(packets.begin(), packets.end());
+
+	auto pos2 = std::lower_bound(packets.begin(), packets.end(), packet2);
+	auto pos6 = std::lower_bound(pos2, packets.end(), packet6);
+	std::cout << (std::distance(packets.begin(), pos2) + 1) * (std::distance(packets.begin(), pos6) + 1) << std::endl;
 }

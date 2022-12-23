@@ -106,3 +106,26 @@ I wanted something similar in *C++*, after asking two friends, realised that `st
 Next step was overriding `operator<()` following the schema I had done in swift. The first part worked flawlessly. But, on the second part, a wild infinite loop appeared.
 
 I made a second implementation using `std::visit`. That's when I have realized that both my *Swift* and *C++* code had the same bug. Since I was using  `std::lexicographical_compare`, it already took care of the empty cases ([]) for the lists. Once I removed that in the first implementation, that one worked as well.
+
+
+### Day 14
+This has been by far the most troublesome problem... but it wasn't due to code at all. I got stranded in Nuremberg by Lufthansa (f*ck them) due to "snow storm". Part 1 was quite easy and I coded the whole thing while I was in the plane waiting for them to decide whether we could disembark. As for the second part I had some issue which was solved while I was rubberducking with a professional curling player who happened to be computer science student as well.
+
+
+### Day 18
+Haven't had the mindset these last days, as you can see days 15-17 haven't been done yet. It took me 2 days to fly and this was the least of my problems.
+It did help though to keep my mind occupied. Wasn't as difficult as I first considered it, but some nasty accumulation of off-by-one errors prevented a quick resolution.
+
+
+### Day 20
+Another quite straightforward problem. Looks like I'm getting the hang of these kind of challenges. But sometimes they bite back. Instead of doing the *euclidean reminder* I thought it was clever to just iterate until the value was positive. Didn't think much of it and part 2 took around half a second per iteration on release... After some profiling I found out my cleverness wasn't such, numbers were too big. Once implemented it the right way, solution came immediately.
+
+
+### Day 21
+I was getting [day 13](#day-13) vibes. I knew variants was what I wanted to use. Then it was just a matter of going recursively until a monkey yelled a number.
+For part 2 I knew what was asked of me, but still couldn't find a proper way of attacking the problem. Then considered *Newton-Raphson* method which I had learned in computational physics. Ended up doing *secant method* since it's more flexible and I didn't want to deal with derivatives. I still want to think another way to solve this.
+
+
+### Day 23
+As soon as I read half of the text I thought of using a `std::unordered_set` to hold the elf positions (à la [day 14](#day-14) with the rocks and the sand). The possible moves is a `std::unordered_map` holds the future locations as key and a vector of the elves which would move there. That way we can easily tell
+when there will be collisions and those elves won't move. Finally using the *bounding box* method from [day 18](#day-18) saves the day.

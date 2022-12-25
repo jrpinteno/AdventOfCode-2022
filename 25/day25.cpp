@@ -1,8 +1,5 @@
 #include "../Utils/Utils.h"
 
-#include <cmath>
-
-
 char decToSnafu(const int64_t digit) {
 	const std::array<char, 5> snafu{'0', '1', '2', '=', '-'};
 	return snafu[digit];
@@ -14,18 +11,18 @@ int main() {
 	int64_t snafuSum = 0;
 
 	for (auto& snafu : snafus) {
-		int position = 0;
+		int64_t power = 1;
 
 		std::string::reverse_iterator rit = snafu.rbegin();
 
 		while (rit != snafu.rend()) {
 			switch (*rit) {
 				case '2':
-					snafuSum += 2 * std::pow(5, position);
+					snafuSum += 2 * power;
 					break;
 
 				case '1':
-					snafuSum += std::pow(5, position);
+					snafuSum += power;
 					break;
 
 				case '0':
@@ -33,15 +30,15 @@ int main() {
 					break;
 
 				case '-':
-					snafuSum -= std::pow(5, position);
+					snafuSum -= power;
 					break;
 
 				case '=':
-					snafuSum -= 2 * std::pow(5, position);
+					snafuSum -= 2 * power;
 					break;
 			}
 
-			position += 1;
+			power *= 5;
 			rit += 1;
 		}
 	}
